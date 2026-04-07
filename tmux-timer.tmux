@@ -27,6 +27,7 @@ set_default @tmux_timer_running "0"
 set_default @tmux_timer_started_at "0"
 set_default @tmux_timer_accumulated_sec "0"
 set_default @tmux_timer_status_interval_saved ""
+set_default @tmux_timer_sound_enabled "1"
 
 tmux_set @tmux_timer_dir "$CURRENT_DIR"
 tmux_set @tmux_timer_segment "#($CURRENT_DIR/scripts/render.sh)"

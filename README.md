@@ -11,6 +11,7 @@ Useful for Pomodoro sessions, focused coding blocks, or custom work/break routin
 - Visual 12-step progress bar
 - `1` to `1440` minute timers
 - Start, pause, stop, and reset controls
+- Soft sound on start and completion
 - Uses `status-right`, so it can sit next to items like battery status
 
 ## Install

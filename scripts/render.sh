@@ -6,6 +6,14 @@ tmux_get() {
   tmux show-option -gqv "$1"
 }
 
+play_sound() {
+  sound_name="$1"
+  timer_dir="$(tmux_get @tmux_timer_dir)"
+  if [ -n "$timer_dir" ]; then
+    "$timer_dir/scripts/play-sound.sh" "$sound_name" >/dev/null 2>&1 &
+  fi
+}
+
 tmux_restore_refresh() {
   saved_interval="$(tmux_get @tmux_timer_status_interval_saved)"
   if [ -n "$saved_interval" ]; then
@@ -67,6 +75,7 @@ if [ "$elapsed_sec" -ge "$duration_sec" ]; then
     tmux set-option -gq @tmux_timer_accumulated_sec "$duration_sec"
     tmux set-option -gq @tmux_timer_state "done"
     tmux_restore_refresh
+    play_sound end
   fi
 fi
 
