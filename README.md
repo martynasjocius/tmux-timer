@@ -1,8 +1,10 @@
-# Visual Tmux Timer
+# tmux-timer
 
-A simple visual timer for tmux.
+A small visual timer plugin for tmux.
 
-It adds a colored progress bar to the status line and makes it easy to start, pause, stop, and reset a timer.
+It adds a colored progress bar to the status line and lets you see and control the timer from any pane, window, or session.
+
+Useful for Pomodoro sessions, focused coding blocks, or custom work/break routines.
 
 ## Features
 
@@ -37,7 +39,7 @@ Start opens a prompt with a default of `25` minutes.
 
 ## Development
 
-From the project directory:
+From the repo root:
 
 ```bash
 ./tmux-timer.tmux
