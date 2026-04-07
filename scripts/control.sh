@@ -26,7 +26,7 @@ activate_refresh() {
   if [ -z "$saved_interval" ]; then
     tmux_set @tmux_timer_status_interval_saved "$(tmux_get status-interval)"
   fi
-  tmux set-option -gq status-interval 5
+  tmux set-option -gq status-interval 2
 }
 
 restore_refresh() {

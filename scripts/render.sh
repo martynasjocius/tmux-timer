@@ -76,6 +76,8 @@ if [ "$elapsed_sec" -ge "$duration_sec" ]; then
     tmux set-option -gq @tmux_timer_state "done"
     tmux_restore_refresh
     play_sound end
+    running="0"
+    state="done"
   fi
 fi
 
@@ -101,6 +103,7 @@ fi
 
 palette="93 99 39 45 51 50 49 48 179 215 214 208"
 set -- $palette
+palette_colors="$*"
 case "$state" in
   stopped)
     label_color='colour244'
@@ -120,9 +123,27 @@ case "$state" in
     ;;
 esac
 
-printf '#[fg=%s]  %sm #[default]' "$elapsed_label_color" "$elapsed_min"
+icon_color="$elapsed_label_color"
+
+if [ "$state" = "running" ]; then
+  set -- $palette_colors
+  active_slot="$filled_slots"
+  if [ "$active_slot" -lt 1 ]; then
+    active_slot=1
+  fi
+  index=1
+  for color in "$@"; do
+    if [ "$index" -eq "$active_slot" ]; then
+      icon_color="colour${color}"
+      break
+    fi
+    index=$((index + 1))
+  done
+fi
+
+printf '#[fg=%s]  #[fg=%s]%sm #[default]' "$icon_color" "$elapsed_label_color" "$elapsed_min"
 slot=1
-for color in "$@"; do
+for color in $palette_colors; do
   if [ "$slot" -le "$filled_slots" ]; then
     printf '#[fg=colour%s]▮' "$color"
   else
