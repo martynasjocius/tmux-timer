@@ -1,36 +1,48 @@
-# tmux-timer
+# Visual Tmux Timer
 
-Visual tmux timer with a 10-step progress bar in `status-right`.
+A simple visual timer for tmux.
 
-Current control flow:
+It adds a colored progress bar to the status line and makes it easy to start, pause, stop, and reset a timer.
 
-- `prefix + T`, then `s` to start a new timer
-- `prefix + T`, then `p` to pause or resume
-- `prefix + T`, then `x` to stop and show `0m`
-- `prefix + T`, then `r` to reset to the configured duration
+## Features
 
-Development load:
+- Visual 12-step progress bar
+- `1` to `1440` minute timers
+- Start, pause, stop, and reset controls
+- Uses `status-right`, so it can sit next to items like battery status
 
-```tmux
-run-shell ~/.tmux/plugins/tmux-timer/tmux-timer.tmux
-```
+## Install
 
-TPM install:
+With TPM:
 
 ```tmux
 set -g @plugin 'martynasjocius/tmux-timer'
 run '~/.tmux/plugins/tpm/tpm'
 ```
 
-Repo-local development load:
+Manual load:
+
+```tmux
+run-shell ~/.tmux/plugins/tmux-timer/tmux-timer.tmux
+```
+
+## Usage
+
+- `prefix + T`, then `s` to start
+- `prefix + T`, then `p` to pause or resume
+- `prefix + T`, then `x` to stop
+- `prefix + T`, then `r` to reset
+
+Start opens a prompt with a default of `25` minutes.
+
+## Development
+
+From the project directory:
 
 ```bash
-cd tmux-timer
 ./tmux-timer.tmux
 ```
 
-Notes:
+---
 
-- Start prompt accepts `1` to `1440` minutes
-- Timer is prepended to `status-right`, so it appears left of the battery segment
-- State is stored in tmux global user options prefixed with `@tmux_timer_`
+Created by Martynas Jocius.
