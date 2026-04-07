@@ -28,4 +28,20 @@ if command -v paplay >/dev/null 2>&1; then
   exec paplay "$sound_file"
 fi
 
+if command -v afplay >/dev/null 2>&1; then
+  exec afplay "$sound_file"
+fi
+
+if command -v aplay >/dev/null 2>&1; then
+  exec aplay "$sound_file"
+fi
+
+if command -v play >/dev/null 2>&1; then
+  exec play -q "$sound_file"
+fi
+
+if command -v ffplay >/dev/null 2>&1; then
+  exec ffplay -nodisp -autoexit -loglevel quiet "$sound_file"
+fi
+
 exit 0
