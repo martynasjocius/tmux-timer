@@ -13,6 +13,22 @@ tmux_set() {
   tmux set-option -gq "$1" "$2"
 }
 
+activate_refresh() {
+  saved_interval="$(tmux_get @tmux_timer_status_interval_saved)"
+  if [ -z "$saved_interval" ]; then
+    tmux_set @tmux_timer_status_interval_saved "$(tmux_get status-interval)"
+  fi
+  tmux set-option -gq status-interval 5
+}
+
+restore_refresh() {
+  saved_interval="$(tmux_get @tmux_timer_status_interval_saved)"
+  if [ -n "$saved_interval" ]; then
+    tmux set-option -gq status-interval "$saved_interval"
+    tmux_set @tmux_timer_status_interval_saved ""
+  fi
+}
+
 now_epoch() {
   date +%s
 }
@@ -53,14 +69,16 @@ pause_or_resume() {
     tmux_set @tmux_timer_running "0"
     tmux_set @tmux_timer_started_at "0"
     tmux_set @tmux_timer_state "paused"
+    restore_refresh
     tmux display-message "timer: paused"
     exit 0
   fi
 
-  if [ "$state" = "paused" ] || [ "$state" = "done" ]; then
+  if [ "$state" = "paused" ]; then
     tmux_set @tmux_timer_running "1"
     tmux_set @tmux_timer_started_at "$current_now"
     tmux_set @tmux_timer_state "running"
+    activate_refresh
     tmux display-message "timer: resumed"
     exit 0
   fi
@@ -92,6 +110,7 @@ start_new() {
   tmux_set @tmux_timer_started_at "$current_now"
   tmux_set @tmux_timer_running "1"
   tmux_set @tmux_timer_state "running"
+  activate_refresh
   tmux display-message "timer: started ${minutes_arg}m"
 }
 
@@ -100,6 +119,7 @@ stop_timer() {
   tmux_set @tmux_timer_started_at "0"
   tmux_set @tmux_timer_accumulated_sec "0"
   tmux_set @tmux_timer_state "stopped"
+  restore_refresh
   tmux display-message "timer: stopped"
 }
 
@@ -108,6 +128,7 @@ reset_timer() {
   tmux_set @tmux_timer_started_at "0"
   tmux_set @tmux_timer_accumulated_sec "0"
   tmux_set @tmux_timer_state "paused"
+  restore_refresh
   tmux display-message "timer: reset to ${duration_min}m"
 }
 

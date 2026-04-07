@@ -6,6 +6,14 @@ tmux_get() {
   tmux show-option -gqv "$1"
 }
 
+tmux_restore_refresh() {
+  saved_interval="$(tmux_get @tmux_timer_status_interval_saved)"
+  if [ -n "$saved_interval" ]; then
+    tmux set-option -gq status-interval "$saved_interval"
+    tmux set-option -gq @tmux_timer_status_interval_saved ""
+  fi
+}
+
 state="$(tmux_get @tmux_timer_state)"
 running="$(tmux_get @tmux_timer_running)"
 duration_min="$(tmux_get @tmux_timer_duration_min)"
@@ -57,6 +65,7 @@ if [ "$elapsed_sec" -ge "$duration_sec" ]; then
     tmux set-option -gq @tmux_timer_started_at "0"
     tmux set-option -gq @tmux_timer_accumulated_sec "$duration_sec"
     tmux set-option -gq @tmux_timer_state "done"
+    tmux_restore_refresh
   fi
 fi
 
@@ -95,8 +104,8 @@ case "$state" in
     label_color='colour255'
     ;;
   done)
-    printf '#[fg=%s,bg=default]◹ ' "$active_clock_color"
-    label_color='colour255'
+    printf '#[fg=colour255,bg=default]◷ '
+    label_color='colour250'
     ;;
 esac
 
@@ -109,4 +118,4 @@ for color in "$@"; do
   fi
   slot=$((slot + 1))
 done
-printf '#[fg=%s] %sm #[default]' "$label_color" "$remaining_min"
+printf '#[fg=%s] %sm/%sm #[default]' "$label_color" "$remaining_min" "$duration_min"
