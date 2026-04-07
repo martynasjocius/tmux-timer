@@ -46,6 +46,7 @@ esac
 
 duration_sec=$((duration_min * 60))
 elapsed_sec="$accumulated_sec"
+segment_count=12
 
 if [ "$state" = "stopped" ]; then
   elapsed_sec=0
@@ -70,10 +71,10 @@ if [ "$elapsed_sec" -ge "$duration_sec" ]; then
 fi
 
 remaining_sec=$((duration_sec - elapsed_sec))
-filled_slots=$((elapsed_sec * 10 / duration_sec))
+filled_slots=$((elapsed_sec * segment_count / duration_sec))
 
-if [ "$filled_slots" -gt 10 ]; then
-  filled_slots=10
+if [ "$filled_slots" -gt "$segment_count" ]; then
+  filled_slots="$segment_count"
 fi
 
 if [ "$remaining_sec" -le 0 ]; then
@@ -89,17 +90,17 @@ if [ "$state" = "stopped" ]; then
   elapsed_min=0
 fi
 
-palette="39 45 51 50 49 48 179 215 214 208"
+palette="93 99 39 45 51 50 49 48 179 215 214 208"
 set -- $palette
 case "$state" in
   stopped)
-    label_color='colour250'
+    label_color='colour244'
     ;;
   running|paused)
     label_color='colour255'
     ;;
   done)
-    label_color='colour250'
+    label_color='colour244'
     ;;
 esac
 
