@@ -107,11 +107,11 @@ case "$state" in
     elapsed_label_color='colour244'
     ;;
   running)
-    label_color='colour255'
+    label_color='colour215'
     elapsed_label_color='colour141'
     ;;
   paused)
-    label_color='colour255'
+    label_color='colour215'
     elapsed_label_color='colour255'
     ;;
   done)
@@ -120,7 +120,7 @@ case "$state" in
     ;;
 esac
 
-printf '#[fg=%s]%sm #[default]' "$elapsed_label_color" "$elapsed_min"
+printf '#[fg=%s]  %sm #[default]' "$elapsed_label_color" "$elapsed_min"
 slot=1
 for color in "$@"; do
   if [ "$slot" -le "$filled_slots" ]; then
