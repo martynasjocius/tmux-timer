@@ -10,7 +10,7 @@ Useful for Pomodoro sessions, focused coding blocks, or custom work/break routin
 
 - Visual 12-step progress bar
 - `1` to `1440` minute timers
-- Start, pause, stop, and reset controls
+- Start and stop controls
 - Soft sound on start and completion
 - Uses `status-right`, so it can sit next to items like battery status
 
@@ -32,11 +32,9 @@ run-shell ~/.tmux/plugins/tmux-timer/tmux-timer.tmux
 ## Usage
 
 - `prefix + T`, then `s` to start
-- `prefix + T`, then `p` to pause or resume
 - `prefix + T`, then `x` to stop
-- `prefix + T`, then `r` to reset
 
-Start opens a prompt with a default of `25` minutes.
+Start opens a prompt with the last used duration. The initial default is `25` minutes.
 
 ## Development
 

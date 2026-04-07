@@ -65,35 +65,6 @@ case "$accumulated_sec" in
     ;;
 esac
 
-pause_or_resume() {
-  current_now="$(now_epoch)"
-
-  if [ "$running" = "1" ]; then
-    elapsed="$accumulated_sec"
-    if [ "$started_at" -gt 0 ] && [ "$current_now" -gt "$started_at" ]; then
-      elapsed=$((elapsed + current_now - started_at))
-    fi
-    tmux_set @tmux_timer_accumulated_sec "$elapsed"
-    tmux_set @tmux_timer_running "0"
-    tmux_set @tmux_timer_started_at "0"
-    tmux_set @tmux_timer_state "paused"
-    restore_refresh
-    tmux display-message "timer: paused"
-    exit 0
-  fi
-
-  if [ "$state" = "paused" ]; then
-    tmux_set @tmux_timer_running "1"
-    tmux_set @tmux_timer_started_at "$current_now"
-    tmux_set @tmux_timer_state "running"
-    activate_refresh
-    tmux display-message "timer: resumed"
-    exit 0
-  fi
-
-  tmux display-message "timer: nothing to resume"
-}
-
 start_new() {
   if [ -z "$minutes_arg" ]; then
     tmux display-message "timer: missing minutes"
@@ -132,27 +103,12 @@ stop_timer() {
   tmux display-message "timer: stopped"
 }
 
-reset_timer() {
-  tmux_set @tmux_timer_running "0"
-  tmux_set @tmux_timer_started_at "0"
-  tmux_set @tmux_timer_accumulated_sec "0"
-  tmux_set @tmux_timer_state "paused"
-  restore_refresh
-  tmux display-message "timer: reset to ${duration_min}m"
-}
-
 case "$command_name" in
   start)
     start_new
     ;;
-  pause)
-    pause_or_resume
-    ;;
   stop)
     stop_timer
-    ;;
-  reset)
-    reset_timer
     ;;
   *)
     tmux display-message "timer: unknown command"

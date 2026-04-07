@@ -41,10 +41,10 @@ case "$status_right" in
     ;;
 esac
 
-tmux bind-key T switch-client -T tmux-timer \; display-message "timer: s=start p=pause/resume x=stop r=reset"
-tmux bind-key -T tmux-timer s command-prompt -I "25" -p "Timer minutes (1-1440)" "run-shell '$CURRENT_DIR/scripts/control.sh start %%'"
-tmux bind-key -T tmux-timer p run-shell "'$CURRENT_DIR/scripts/control.sh' pause"
+tmux bind-key T switch-client -T tmux-timer \; display-message "timer: s=start x=stop"
+tmux bind-key -T tmux-timer s command-prompt -I "#{@tmux_timer_duration_min}" -p "Timer minutes (1-1440)" "run-shell '$CURRENT_DIR/scripts/control.sh start %%'"
 tmux bind-key -T tmux-timer x run-shell "'$CURRENT_DIR/scripts/control.sh' stop"
-tmux bind-key -T tmux-timer r run-shell "'$CURRENT_DIR/scripts/control.sh' reset"
+tmux unbind-key -T tmux-timer p
+tmux unbind-key -T tmux-timer r
 tmux bind-key -T tmux-timer Escape display-message "timer: cancelled"
 tmux bind-key -T tmux-timer q display-message "timer: cancelled"
