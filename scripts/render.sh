@@ -82,40 +82,35 @@ else
   remaining_min=$(((remaining_sec + 59) / 60))
 fi
 
+elapsed_min=$((elapsed_sec / 60))
+
 if [ "$state" = "stopped" ]; then
   remaining_min=0
+  elapsed_min=0
 fi
 
 palette="39 45 51 50 49 48 179 215 214 208"
 set -- $palette
-active_clock_color='colour39'
-
 case "$state" in
   stopped)
-    printf '#[fg=colour255,bg=default]◷ '
     label_color='colour250'
     ;;
-  running)
-    printf '#[fg=%s,bg=default]◷ ' "$active_clock_color"
-    label_color='colour255'
-    ;;
-  paused)
-    printf '#[fg=%s,bg=default]◴ ' "$active_clock_color"
+  running|paused)
     label_color='colour255'
     ;;
   done)
-    printf '#[fg=colour255,bg=default]◷ '
     label_color='colour250'
     ;;
 esac
 
+printf '#[fg=%s]%sm #[default]' "$label_color" "$elapsed_min"
 slot=1
 for color in "$@"; do
   if [ "$slot" -le "$filled_slots" ]; then
-    printf '#[fg=colour%s]▰' "$color"
+    printf '#[fg=colour%s]▮' "$color"
   else
-    printf '#[fg=colour238]▱'
+    printf '#[fg=colour%s]▯' "$color"
   fi
   slot=$((slot + 1))
 done
-printf '#[fg=%s] %sm/%sm #[default]' "$label_color" "$remaining_min" "$duration_min"
+printf '#[fg=%s] %sm #[default]' "$label_color" "$duration_min"
