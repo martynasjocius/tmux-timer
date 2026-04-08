@@ -36,6 +36,11 @@ run-shell ~/.tmux/plugins/tmux-timer/tmux-timer.tmux
 
 Start opens a prompt with the last used duration. The initial default is `25` minutes.
 
+You can optionally add a task label after the duration:
+
+- `2`
+- `2 few words`
+
 ## Development
 
 From the repo root:

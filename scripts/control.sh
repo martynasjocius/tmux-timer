@@ -3,7 +3,10 @@
 set -eu
 
 command_name="${1:-}"
-minutes_arg="${2:-}"
+if [ "$#" -gt 0 ]; then
+  shift
+fi
+start_input="$*"
 
 tmux_get() {
   tmux show-option -gqv "$1"
@@ -46,6 +49,7 @@ state="$(tmux_get @tmux_timer_state)"
 running="$(tmux_get @tmux_timer_running)"
 started_at="$(tmux_get @tmux_timer_started_at)"
 accumulated_sec="$(tmux_get @tmux_timer_accumulated_sec)"
+task_label="$(tmux_get @tmux_timer_task_label)"
 
 case "$duration_min" in
   ''|*[!0-9]*)
@@ -66,9 +70,19 @@ case "$accumulated_sec" in
 esac
 
 start_new() {
-  if [ -z "$minutes_arg" ]; then
+  if [ -z "$start_input" ]; then
     tmux display-message "timer: missing minutes"
     exit 1
+  fi
+
+  minutes_arg="${start_input%% *}"
+  if [ "$minutes_arg" = "$start_input" ]; then
+    task_label=""
+  else
+    task_label="${start_input#"$minutes_arg"}"
+    while [ "${task_label# }" != "$task_label" ]; do
+      task_label="${task_label# }"
+    done
   fi
 
   case "$minutes_arg" in
@@ -89,9 +103,14 @@ start_new() {
   tmux_set @tmux_timer_started_at "$current_now"
   tmux_set @tmux_timer_running "1"
   tmux_set @tmux_timer_state "running"
+  tmux_set @tmux_timer_task_label "$task_label"
   activate_refresh
   play_sound start
-  tmux display-message "timer: started ${minutes_arg}m"
+  if [ -n "$task_label" ]; then
+    tmux display-message "timer: started ${minutes_arg}m ${task_label}"
+  else
+    tmux display-message "timer: started ${minutes_arg}m"
+  fi
 }
 
 stop_timer() {
@@ -99,6 +118,7 @@ stop_timer() {
   tmux_set @tmux_timer_started_at "0"
   tmux_set @tmux_timer_accumulated_sec "0"
   tmux_set @tmux_timer_state "stopped"
+  tmux_set @tmux_timer_task_label ""
   restore_refresh
   tmux display-message "timer: stopped"
 }

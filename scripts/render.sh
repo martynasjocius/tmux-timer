@@ -22,11 +22,16 @@ tmux_restore_refresh() {
   fi
 }
 
+escape_status_text() {
+  printf '%s' "$1" | sed 's/#/##/g'
+}
+
 state="$(tmux_get @tmux_timer_state)"
 running="$(tmux_get @tmux_timer_running)"
 duration_min="$(tmux_get @tmux_timer_duration_min)"
 started_at="$(tmux_get @tmux_timer_started_at)"
 accumulated_sec="$(tmux_get @tmux_timer_accumulated_sec)"
+task_label="$(tmux_get @tmux_timer_task_label)"
 
 case "$state" in
   '')
@@ -124,6 +129,7 @@ case "$state" in
 esac
 
 icon_color="$elapsed_label_color"
+escaped_task_label="$(escape_status_text "$task_label")"
 
 if [ "$state" = "running" ]; then
   set -- $palette_colors
@@ -141,13 +147,19 @@ if [ "$state" = "running" ]; then
   done
 fi
 
-printf '#[fg=%s]  #[fg=%s]%sm #[default]' "$icon_color" "$elapsed_label_color" "$elapsed_min"
+printf '#[fg=%s]#[default]' "$icon_color"
+if [ -n "$escaped_task_label" ]; then
+  printf '  #[fg=%s]%s#[default]' "$label_color" "$escaped_task_label"
+  printf ' #[fg=%s]%sm#[default] ' "$elapsed_label_color" "$elapsed_min"
+else
+  printf '  #[fg=%s]%sm#[default] ' "$elapsed_label_color" "$elapsed_min"
+fi
 slot=1
 for color in $palette_colors; do
   if [ "$slot" -le "$filled_slots" ]; then
     printf '#[fg=colour%s]▮' "$color"
   else
-    printf '#[fg=colour%s]▯' "$color"
+    printf '#[fg=%s]▯' "$label_color"
   fi
   slot=$((slot + 1))
 done
