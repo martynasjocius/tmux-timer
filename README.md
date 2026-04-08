@@ -1,18 +1,25 @@
 # tmux-timer
 
-A small visual timer plugin for tmux.
+A keyboard-first timer for tmux that lives in your status line.
 
-It adds a colored progress bar to the status line and lets you see and control the timer from any pane, window, or session.
+Start a focused work session, keep the countdown visible in every pane, attach a short task label, and switch themes without leaving tmux.
 
-Useful for Pomodoro sessions, focused coding blocks, or custom work/break routines.
+## Why Use It
+
+- Keeps a live timer in the status line instead of a separate window or app
+- Works well for Pomodoro sessions, deep work blocks, and ad hoc countdowns
+- Controlled entirely from tmux key bindings
+- Supports task labels and preset themes
+- Plays a soft sound when a timer starts or finishes
 
 ## Features
 
-- Visual 12-step progress bar
-- `1` to `1440` minute timers
-- Start and stop controls
-- Soft sound on start and completion
-- Uses `status-right`, so it can sit next to items like battery status
+- Status-line timer with elapsed time, total time, and visual progress
+- Start, stop, and theme switching from tmux commands
+- Optional inline task label
+- Preset themes: `levander`, `spectrum`, `ocean`, `forest`, `mono`
+- Remembers the last used duration
+- Supports timers from `1` to `1440` minutes
 
 ## Install
 
@@ -31,32 +38,55 @@ run-shell ~/.tmux/plugins/tmux-timer/tmux-timer.tmux
 
 ## Usage
 
-- `prefix + T`, then `s` to start
-- `prefix + T`, then `t` to change theme
-- `prefix + T`, then `x` to stop
+Default key bindings:
 
-Start opens a prompt with the last used duration. The initial default is `25` minutes.
+- `prefix + T`, then `s` to start a timer
+- `prefix + T`, then `x` to stop the current timer
+- `prefix + T`, then `t` to switch theme
 
-You can optionally add a task label after the duration:
+Starting a timer opens a prompt prefilled with the last used duration.
 
-- `2`
-- `2 few words`
+Examples:
 
-## Theme Presets
+- `25`
+- `25 write docs`
+- `90 deep work`
 
-The plugin now supports named preset themes through tmux config:
+Task labels are displayed inline in the status line and truncated automatically when needed.
+
+## Configuration
+
+Default theme:
 
 ```tmux
-set -g @tmux_timer_theme 'ocean'
+set -g @tmux_timer_theme 'levander'
 ```
 
-Available presets:
+Available themes:
 
-- `spectrum` default theme, matches the original multicolor look
-- `ocean` blue and cyan range
-- `forest` green to amber range
-- `mono` grayscale
-- `levander` gray, lavender, and light green
+- `levander`
+- `spectrum`
+- `ocean`
+- `forest`
+- `mono`
+
+Sound alerts:
+
+```tmux
+set -g @tmux_timer_sound_enabled '1'
+```
+
+Disable sounds:
+
+```tmux
+set -g @tmux_timer_sound_enabled '0'
+```
+
+## Notes
+
+- The plugin adds its segment to `status-right`
+- The clock icon uses a Nerd Font glyph, so a Nerd Font-enabled terminal is recommended
+- Theme changes can be made either in tmux config or from the `prefix + T`, then `t` prompt
 
 ## Development
 
@@ -66,6 +96,10 @@ From the repo root:
 ./tmux-timer.tmux
 ```
 
----
+## Author
 
 Created by Martynas Jocius.
+
+## License
+
+[MIT](./LICENSE)
