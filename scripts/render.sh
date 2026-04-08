@@ -54,6 +54,15 @@ escape_status_text() {
   printf '%s' "$1" | sed 's/#/##/g'
 }
 
+truncate_task_label() {
+  label="$1"
+  if [ "${#label}" -le 16 ]; then
+    printf '%s' "$label"
+  else
+    printf '%s...' "${label:0:13}"
+  fi
+}
+
 state="$(tmux_get @tmux_timer_state)"
 running="$(tmux_get @tmux_timer_running)"
 duration_min="$(tmux_get @tmux_timer_duration_min)"
@@ -170,7 +179,8 @@ case "$state" in
 esac
 
 icon_color="$elapsed_label_color"
-escaped_task_label="$(escape_status_text "$task_label")"
+display_task_label="$(truncate_task_label "$task_label")"
+escaped_task_label="$(escape_status_text "$display_task_label")"
 
 if [ "$state" = "running" ]; then
   if [ "$theme_mode" = "gradient" ]; then
