@@ -29,6 +29,7 @@ set_default @tmux_timer_accumulated_sec "0"
 set_default @tmux_timer_task_label ""
 set_default @tmux_timer_status_interval_saved ""
 set_default @tmux_timer_sound_enabled "1"
+set_default @tmux_timer_theme "levander"
 
 tmux_set @tmux_timer_dir "$CURRENT_DIR"
 tmux_set @tmux_timer_segment "#($CURRENT_DIR/scripts/render.sh)"
@@ -42,8 +43,9 @@ case "$status_right" in
     ;;
 esac
 
-tmux bind-key T switch-client -T tmux-timer \; display-message "timer: s=start x=stop"
+tmux bind-key T switch-client -T tmux-timer \; display-message "timer: s=start t=theme x=stop"
 tmux bind-key -T tmux-timer s command-prompt -I "#{@tmux_timer_duration_min}" -p "Timer minutes:" "run-shell '$CURRENT_DIR/scripts/control.sh start %%'"
+tmux bind-key -T tmux-timer t command-prompt -I "#{@tmux_timer_theme}" -p "Timer theme (spectrum/ocean/forest/mono/levander):" "run-shell '$CURRENT_DIR/scripts/control.sh theme %%'"
 tmux bind-key -T tmux-timer x run-shell "'$CURRENT_DIR/scripts/control.sh' stop"
 tmux unbind-key -T tmux-timer p
 tmux unbind-key -T tmux-timer r

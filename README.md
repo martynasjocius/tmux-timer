@@ -32,6 +32,7 @@ run-shell ~/.tmux/plugins/tmux-timer/tmux-timer.tmux
 ## Usage
 
 - `prefix + T`, then `s` to start
+- `prefix + T`, then `t` to change theme
 - `prefix + T`, then `x` to stop
 
 Start opens a prompt with the last used duration. The initial default is `25` minutes.
@@ -40,6 +41,22 @@ You can optionally add a task label after the duration:
 
 - `2`
 - `2 few words`
+
+## Theme Presets
+
+The plugin now supports named preset themes through tmux config:
+
+```tmux
+set -g @tmux_timer_theme 'ocean'
+```
+
+Available presets:
+
+- `spectrum` default theme, matches the original multicolor look
+- `ocean` blue and cyan range
+- `forest` green to amber range
+- `mono` grayscale
+- `levander` gray, lavender, and light green
 
 ## Development
 

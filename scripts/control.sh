@@ -123,12 +123,28 @@ stop_timer() {
   tmux display-message "timer: stopped"
 }
 
+set_theme() {
+  case "$start_input" in
+    spectrum|ocean|forest|mono|levander)
+      tmux_set @tmux_timer_theme "$start_input"
+      tmux display-message "timer: theme set to $start_input"
+      ;;
+    *)
+      tmux display-message "timer: theme must be spectrum, ocean, forest, mono, or levander"
+      exit 1
+      ;;
+  esac
+}
+
 case "$command_name" in
   start)
     start_new
     ;;
   stop)
     stop_timer
+    ;;
+  theme)
+    set_theme
     ;;
   *)
     tmux display-message "timer: unknown command"

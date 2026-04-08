@@ -6,6 +6,34 @@ tmux_get() {
   tmux show-option -gqv "$1"
 }
 
+resolve_theme() {
+  case "$1" in
+    ''|spectrum)
+      printf '%s\n' \
+        "93 99 39 45 51 50 49 48 179 215 214 208|colour222|colour141|colour244|gradient"
+      ;;
+    ocean)
+      printf '%s\n' \
+        "33 33 33 33 33 33 33 33 33 33 33 33|colour39|colour45|colour244|solid"
+      ;;
+    forest)
+      printf '%s\n' \
+        "34 34 34 34 34 34 34 34 34 34 34 34|colour130|colour22|colour244|solid"
+      ;;
+    mono)
+      printf '%s\n' \
+        "250 250 250 250 250 250 250 250 250 250 250 250|colour250|colour255|colour244|solid"
+      ;;
+    levander)
+      printf '%s\n' \
+        "120 120 120 120 120 120 120 120 120 120 120 120|colour183|colour120|colour244|solid"
+      ;;
+    *)
+      resolve_theme "spectrum"
+      ;;
+  esac
+}
+
 play_sound() {
   sound_name="$1"
   timer_dir="$(tmux_get @tmux_timer_dir)"
@@ -32,6 +60,7 @@ duration_min="$(tmux_get @tmux_timer_duration_min)"
 started_at="$(tmux_get @tmux_timer_started_at)"
 accumulated_sec="$(tmux_get @tmux_timer_accumulated_sec)"
 task_label="$(tmux_get @tmux_timer_task_label)"
+theme_name="$(tmux_get @tmux_timer_theme)"
 
 case "$state" in
   '')
@@ -106,25 +135,37 @@ if [ "$state" = "stopped" ]; then
   elapsed_min=0
 fi
 
-palette="93 99 39 45 51 50 49 48 179 215 214 208"
-set -- $palette
-palette_colors="$*"
+theme_config="$(resolve_theme "$theme_name")"
+IFS='|' read -r palette_colors main_color active_color inactive_color theme_mode <<EOF
+$theme_config
+EOF
+
 case "$state" in
   stopped)
-    label_color='colour244'
-    elapsed_label_color='colour244'
+    label_color="$inactive_color"
+    elapsed_label_color="$inactive_color"
     ;;
   running)
-    label_color='colour215'
-    elapsed_label_color='colour141'
+    if [ "$theme_mode" = "gradient" ]; then
+      label_color="$main_color"
+      elapsed_label_color="$active_color"
+    else
+      label_color="$main_color"
+      elapsed_label_color="$active_color"
+    fi
     ;;
   paused)
-    label_color='colour215'
-    elapsed_label_color='colour255'
+    if [ "$theme_mode" = "gradient" ]; then
+      label_color="$main_color"
+      elapsed_label_color='colour255'
+    else
+      label_color="$main_color"
+      elapsed_label_color="$active_color"
+    fi
     ;;
   done)
-    label_color='colour244'
-    elapsed_label_color='colour244'
+    label_color="$inactive_color"
+    elapsed_label_color="$inactive_color"
     ;;
 esac
 
@@ -132,19 +173,11 @@ icon_color="$elapsed_label_color"
 escaped_task_label="$(escape_status_text "$task_label")"
 
 if [ "$state" = "running" ]; then
-  set -- $palette_colors
-  active_slot="$filled_slots"
-  if [ "$active_slot" -lt 1 ]; then
-    active_slot=1
+  if [ "$theme_mode" = "gradient" ]; then
+    icon_color="$active_color"
+  else
+    icon_color="$elapsed_label_color"
   fi
-  index=1
-  for color in "$@"; do
-    if [ "$index" -eq "$active_slot" ]; then
-      icon_color="colour${color}"
-      break
-    fi
-    index=$((index + 1))
-  done
 fi
 
 printf '#[fg=%s]#[default]' "$icon_color"
@@ -157,7 +190,11 @@ fi
 slot=1
 for color in $palette_colors; do
   if [ "$slot" -le "$filled_slots" ]; then
-    printf '#[fg=colour%s]▮' "$color"
+    if [ "$theme_mode" = "gradient" ]; then
+      printf '#[fg=colour%s]▮' "$color"
+    else
+      printf '#[fg=%s]▮' "$active_color"
+    fi
   else
     printf '#[fg=%s]▯' "$label_color"
   fi
