@@ -1,12 +1,11 @@
 # tmux-timer
 
-A keyboard-first timer for tmux that lives in your status line.
+A timer for tmux that lives in your status line.
 
 Start a focused work session, keep the countdown visible in every pane, attach a short task label, and switch themes without leaving tmux.
 
 ## Why Use It
 
-- Keeps a live timer in the status line instead of a separate window or app
 - Works well for Pomodoro sessions, deep work blocks, and ad hoc countdowns
 - Controlled entirely from tmux key bindings
 - Supports task labels and preset themes
@@ -44,15 +43,12 @@ Default key bindings:
 - `prefix + T`, then `x` to stop the current timer
 - `prefix + T`, then `t` to switch theme
 
-Starting a timer opens a prompt prefilled with the last used duration.
-
 Examples:
 
 - `25`
-- `25 write docs`
+- `25 task-x`
 - `90 deep work`
-
-Task labels are displayed inline in the status line and truncated automatically when needed.
+- `10 break`
 
 ## Configuration
 
@@ -70,12 +66,6 @@ Available themes:
 - `forest`
 - `mono`
 
-Sound alerts:
-
-```tmux
-set -g @tmux_timer_sound_enabled '1'
-```
-
 Disable sounds:
 
 ```tmux
@@ -84,7 +74,6 @@ set -g @tmux_timer_sound_enabled '0'
 
 ## Notes
 
-- The plugin adds its segment to `status-right`
 - The clock icon uses a Nerd Font glyph, so a Nerd Font-enabled terminal is recommended
 - Theme changes can be made either in tmux config or from the `prefix + T`, then `t` prompt
 
