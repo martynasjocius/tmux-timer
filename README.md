@@ -1,20 +1,20 @@
 # tmux-timer
 
-A timer for tmux that lives in your status line.
+A timer plugin for tmux that renders in the status line.
 
-Start a focused work session, keep the countdown visible in every pane, attach a short task label, and switch themes without leaving tmux.
+Start a timer, keep it visible in the tmux status line, attach a short task label, and switch themes without leaving tmux.
 
-## Why Use It
+## Overview
 
-- Works well for Pomodoro sessions, deep work blocks, and ad hoc countdowns
+- Useful for Pomodoro sessions, work intervals, and ad hoc countdowns
 - Controlled entirely from tmux key bindings
 - Supports task labels and preset themes
-- Plays a soft sound when a timer starts or finishes
+- Can play a sound when a timer starts or finishes
 
 ## Features
 
 - Status-line timer with elapsed time, total time, and visual progress
-- Start, stop, and theme switching from tmux commands
+- Start, stop, and theme switching from tmux key bindings
 - Optional inline task label
 - Preset themes: `levander`, `spectrum`, `ocean`, `forest`, `mono`
 - Remembers the last used duration
