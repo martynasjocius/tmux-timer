@@ -4,6 +4,8 @@ A timer plugin for tmux that renders in the status line.
 
 Start a timer, keep it visible in the tmux status line, attach a short task label, and switch themes without leaving tmux.
 
+![tmux-timer screenshot](assets/tmux-timer-2026-04.png)
+
 ## Overview
 
 - Useful for Pomodoro sessions, work intervals, and ad hoc countdowns
